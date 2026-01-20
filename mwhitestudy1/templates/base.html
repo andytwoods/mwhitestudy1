@@ -26,8 +26,11 @@
 <!-- Your stuff: Third-party CSS libraries go here -->
 <!-- This file stores project-specific CSS -->
 
-  
+
   <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 
 {% endblock css %}
@@ -44,11 +47,12 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer"></script>
 <!-- Your stuff: Third-party javascript libraries go here -->
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/htmx/2.0.7/htmx.min.js" integrity="sha512-IisGoumHahmfNIhP4wUV3OhgQZaaDBuD6IG4XlyjT77IUkwreZL3T3afO4xXuDanSalZ57Un+UlAbarQjNZCTQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- place project specific Javascript in this file -->
 
-  
+
   <script defer src="{% static 'js/project.js' %}"></script>
 
 
@@ -56,8 +60,8 @@
 </head>
 <body class="{% block bodyclass %}{% endblock bodyclass %}">
   {% block body %}
-  <div class="mb-1">
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
+  <div class="mb-4">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
       <div class="container-fluid">
         <button class="navbar-toggler navbar-toggler-right"
                 type="button"
@@ -70,12 +74,15 @@
         </button>
         <a class="navbar-brand" href="{% url 'home' %}">MWhiteStudy1</a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'flow:start' study_slug='demo' %}">Experiment</a>
             </li>
             {% if request.user.is_authenticated %}
               <li class="nav-item">

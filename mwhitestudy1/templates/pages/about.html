@@ -1,3 +1,33 @@
 {% extends "base.html" %}
 
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <h1 class="display-4 mb-4">About the Study</h1>
+      <p class="lead text-muted">MWhiteStudy1 is a research platform designed for behavioral and HCI-style studies.</p>
+
+      <hr class="my-5">
+
+      <h3>Our Methodology</h3>
+      <p>We use a staged flow approach where participants are guided through a sequence of screens. Each screen can present content, such as text and images, followed by questions to capture judgments, decisions, and comprehension.</p>
+
+      <h3 class="mt-4">Technology Stack</h3>
+      <ul>
+        <li><strong>Django:</strong> Robust backend for data management and security.</li>
+        <li><strong>HTMX:</strong> Seamless, interactive user experience without full page reloads.</li>
+        <li><strong>Bootstrap:</strong> Responsive design for accessibility across devices.</li>
+      </ul>
+
+      <h3 class="mt-4">Data Privacy</h3>
+      <p>All data collected is stored securely and used solely for research purposes. We prioritize participant anonymity and data integrity.</p>
+
+      <div class="mt-5">
+        <a href="{% url 'flow:start' study_slug='demo' %}" class="btn btn-primary">Participate Now</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
 

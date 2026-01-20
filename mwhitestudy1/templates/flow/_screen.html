@@ -1,0 +1,64 @@
+{% load flow_extras %}
+<section data-screen-key="{{ screen.key }}" class="py-4">
+    {% if screen.kind == "content" %}
+        {% if screen.image_url %}
+            <div class="mb-4 text-center">
+                <img src="{{ screen.image_url }}" class="img-fluid rounded shadow-sm" alt="Screen image">
+            </div>
+        {% endif %}
+
+        <div class="mb-4">
+            {{ screen.text_html|safe }}
+        </div>
+
+        {% if screen.questions %}
+            <form hx-post="{% url 'flow:answer' study_slug=study_slug screen_key=screen.key %}"
+                  hx-target="#screen-root"
+                  hx-swap="innerHTML">
+                {% csrf_token %}
+
+                {% for q in screen.questions %}
+                    <div class="mb-3">
+                        <label class="form-label">{{ q.prompt_html|safe }} {% if q.required %}<span class="text-danger">*</span>{% endif %}</label>
+
+                        {% if q.type == "text" %}
+                            <input type="text" name="{{ q.id }}" class="form-control" {% if q.required %}required{% endif %} value="{{ answers|get_item:q.id }}">
+                        {% elif q.type == "int" %}
+                            <input type="number" name="{{ q.id }}" class="form-control" {% if q.required %}required{% endif %} value="{{ answers|get_item:q.id }}">
+                        {% elif q.type == "likert" %}
+                            <div class="d-flex justify-content-between">
+                                {% for opt in q.options %}
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="{{ q.id }}" id="q_{{ q.id }}_{{ opt.value }}" value="{{ opt.value }}" {% if q.required %}required{% endif %} {% if answers|get_item:q.id == opt.value|stringformat:"s" %}checked{% endif %}>
+                                        <label class="form-check-label" for="q_{{ q.id }}_{{ opt.value }}">{{ opt.label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if errors|get_item:q.id %}
+                            <div class="text-danger small">{{ errors|get_item:q.id }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        {% elif screen.next_key %}
+             <button hx-post="{% url 'flow:answer' study_slug=study_slug screen_key=screen.key %}"
+                     hx-target="#screen-root"
+                     hx-swap="innerHTML"
+                     class="btn btn-primary">Continue</button>
+        {% endif %}
+
+    {% elif screen.kind == "continue" %}
+        <div class="text-center py-5">
+            <p class="lead mb-4">Press <strong>Space</strong> to continue</p>
+            <button hx-get="{% url 'flow:screen' study_slug=study_slug screen_key=screen.next_key %}"
+                    hx-target="#screen-root"
+                    hx-swap="innerHTML"
+                    hx-trigger="advance"
+                    class="btn btn-outline-secondary">Click here if Space doesn't work</button>
+        </div>
+    {% endif %}
+</section>

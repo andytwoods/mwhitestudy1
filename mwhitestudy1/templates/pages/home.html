@@ -1,3 +1,36 @@
 {% extends "base.html" %}
 
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm mt-4">
+  <div class="container-fluid py-5 text-center">
+    <h1 class="display-5 fw-bold text-primary">Welcome to MWhiteStudy1</h1>
+    <p class="col-md-8 fs-4 mx-auto text-muted">
+      Participate in our latest research study on human behavior and decision-making.
+      Your insights help us understand complex cognitive processes.
+    </p>
+    <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+      <a href="{% url 'flow:start' study_slug='demo' %}" class="btn btn-primary btn-lg px-4 gap-3 shadow">
+        Join the Experiment
+      </a>
+      <a href="{% url 'about' %}" class="btn btn-outline-secondary btn-lg px-4">Learn More</a>
+    </div>
+  </div>
+</div>
+
+<div class="row align-items-md-stretch mb-5">
+  <div class="col-md-6 mb-4">
+    <div class="h-100 p-5 text-white bg-dark rounded-3 shadow-sm">
+      <h2>Research Focus</h2>
+      <p>We use state-of-the-art methodology to investigate how individuals respond to different vignettes and stimuli in a controlled digital environment.</p>
+    </div>
+  </div>
+  <div class="col-md-6 mb-4">
+    <div class="h-100 p-5 bg-light border rounded-3 shadow-sm">
+      <h2>Data Integrity</h2>
+      <p>Our platform ensures high-quality data collection with precise timing and response tracking, optimized for behavioral science research.</p>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
 
