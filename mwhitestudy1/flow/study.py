@@ -17,13 +17,9 @@ SCREENS = {
                 "required": True,
             },
         ],
-        "next_key": "interstitial_1",
-    },
-    "interstitial_1": {
-        "key": "interstitial_1",
-        "kind": "continue",
         "next_key": "task_1",
     },
+
     "task_1": {
         "key": "task_1",
         "kind": "content",

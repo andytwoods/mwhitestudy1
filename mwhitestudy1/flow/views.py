@@ -7,7 +7,8 @@ from .helpers import get_or_create_participant, get_or_create_progress
 
 def start_study(request, study_slug):
     # For now we ignore study_slug as we only have one hardcoded study
-    participant = get_or_create_participant(request)
+    force_new = request.GET.get("participant") == "new"
+    participant = get_or_create_participant(request, force_new=force_new)
     progress = get_or_create_progress(participant)
 
     screen_key = progress.current_screen_key

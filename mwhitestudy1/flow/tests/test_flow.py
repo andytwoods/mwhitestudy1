@@ -15,6 +15,22 @@ class FlowTests(TestCase):
         assert Progress.objects.count() == 1
         assert ScreenEvent.objects.filter(event_type="render").count() == 1
 
+    def test_start_study_force_new_participant(self):
+        url = reverse("flow:start", kwargs={"study_slug": "demo"})
+        # First request to create a participant
+        self.client.get(url)
+        first_participant_id = self.client.session["participant_id"]
+        assert Participant.objects.count() == 1
+
+        # Second request with ?participant=new
+        response = self.client.get(url + "?participant=new")
+        assert response.status_code == 200
+        second_participant_id = self.client.session["participant_id"]
+
+        assert first_participant_id != second_participant_id
+        assert Participant.objects.count() == 2
+        assert Progress.objects.count() == 2
+
     def test_submit_valid_answer_advances_progress(self):
         # Initialize session
         self.client.get(reverse("flow:start", kwargs={"study_slug": "demo"}))

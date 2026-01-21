@@ -1,11 +1,11 @@
 from .models import Participant, Progress
 from .study import get_first_screen_key
 
-def get_or_create_participant(request):
+def get_or_create_participant(request, force_new=False):
     participant_id = request.session.get("participant_id")
     participant = None
 
-    if participant_id:
+    if participant_id and not force_new:
         try:
             participant = Participant.objects.get(id=participant_id)
         except Participant.DoesNotExist:
