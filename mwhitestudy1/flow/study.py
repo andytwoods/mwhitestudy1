@@ -24,7 +24,7 @@ SCREENS = {
         "key": "task_1",
         "kind": "content",
         "text_html": "<h2>Task 1</h2><p>Observe the image and rate your agreement.</p>",
-        "image_url": "https://via.placeholder.com/400x300",
+        "image_url": "static/study_images/casestudy1.png",
         "questions": [
             {
                 "id": "interest",
