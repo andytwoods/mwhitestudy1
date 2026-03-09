@@ -401,11 +401,28 @@ Core requirements:
 
 ------------------------------------------------------------------------
 
-# Open Design Questions
+## Considerations & Open Design Decisions
 
-Remaining design choices include:
+### 1. Sample Size and Data Density
+Current projections from research notes suggest a target of **100 participants** recruited via Prolific.
+* **Trial Density**: Each participant is expected to rate approximately **20 images**.
+* **Total Data Points**: With 100 participants and 20 ratings each, the goal is to generate **2,000 unique assessment points**.
+* **Budgeting**: Estimated payment is **£2 per participant**.
+* **Complexity**: We cannot rely on simple randomization alone; the system must ensure "balanced-ness" so that images receive roughly equal exposure across the 4 conditions.
 
--   exact number of trials per condition
--   exact confidence scale format
--   number of feedback items per screen
--   final post-feedback questionnaire
+### 2. Temporal Realism and "The Gap"
+A key psychological consideration is how the "feedback" is perceived by the participant.
+* **The "Time Gap" Dilemma**: We must decide whether to **fake a time gap** to simulate a "live" diagnosis from a first human, or explicitly inform participants that they are viewing **historical data** from real humans.
+* **Current Preference**: The notes lean toward telling humans the data was provided in the past but from real humans.
+
+### 3. Social Dynamics: Human Experts and Consensus
+The "Human" and "Human + AI" conditions require a logic for how external opinions are presented.
+* **Quantity and Status**: We need to define the number of "other humans" shown. Notes suggest exploring if these humans are perceived as **"Professors"** (high expertise) or lower-quality raters, as this perception significantly alters how participants weigh the advice.
+* **Consensus Modeling**: We must determine the **"Consensus of humans"** as an independent variable.
+    * **High Consensus**: Multiple humans agreeing with each other.
+    * **Low Consensus/Conflict**: Humans disagreeing, or the AI disagreeing with the human majority.
+* **Bias Triggering**: We may intentionally introduce **"wrongness"** or "low likelihood" assessments from the AI or humans to observe how participant confidence shifts when faced with incorrect consensus or "intrigue".
+
+
+
+*Incorporating **Signal Detection Theory (SDT)** will allow us to model if these social/AI factors shift the participant's **criterion** (bias) or their actual **sensitivity** ($d'$).*
