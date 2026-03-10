@@ -10,18 +10,9 @@ Trials are blocked by condition. Block order is fully randomised per participant
 
 ---
 
-## 2. Carryover / Contrast Effects — Serious Gap
+## 2. Carryover / Contrast Effects — RESOLVED
 
-The biggest methodological concern in a within-subjects design. Once someone has seen AI feedback in block 2, their baseline block 3 is contaminated — they know feedback is coming, they've formed opinions about AI accuracy, etc.
-
-Fixing baseline as block 1 is not a solution — it trades carryover for a systematic order confound (position 1 effects become inseparable from the "no feedback" effect). Full randomisation of block order including baseline is correct.
-
-Carryover is instead managed by:
-- Including block position as a covariate in the mixed model (already captured via `block_position`)
-- Acknowledging residual carryover as a limitation of the within-subjects design
-- Optionally adding short breaks between blocks to reduce fatigue-driven contamination
-
-The spec should explicitly commit to this analysis strategy. It should also note that any residual carryover (e.g. participants knowing feedback is coming once they've seen one feedback block) is an inherent limitation of the within-subjects design, not a fixable implementation issue.
+Full randomisation of block order (no position constraints). Residual carryover controlled statistically via `block_position` as a fixed effect in the GLMM, and acknowledged as an inherent within-subjects limitation in the paper. Breaks between blocks implemented. Full analysis strategy now committed to in the spec (Analysis Strategy section).
 
 ---
 
@@ -44,63 +35,53 @@ The spec should explicitly commit to this analysis strategy. It should also note
 
 ---
 
-## 5. Feedback Accuracy / Manipulation — OPEN, DEFERRED
+## 5 & 6. Feedback Wrongness and Signal Detection Theory — RESOLVED
 
-"Wrongness" is now defined in the spec as feedback that is **opposite to the correct answer** (e.g. the agent diagnoses malignant when ground truth is benign).
+These two issues are interdependent and are addressed together.
 
-How to treat wrongness trials in the analysis is unresolved. Open questions:
-- Should incorrect-feedback trials be a separate factor in the model, or a level within a feedback-accuracy factor?
-- How frequently should wrongness occur — evenly distributed, rare/surprising, or fixed per condition?
-- How does wrongness interact with consensus level (e.g. unanimous wrong vs. split)?
-- Should wrongness be pre-registered as a manipulation or treated as exploratory?
+### Wrongness definition
 
-**This decision is deferred. Do not implement feedback-accuracy logic until resolved.**
+"Wrongness" is feedback that is **opposite to the correct answer** (e.g. the agent diagnoses malignant when ground truth is benign). It is a within-condition factor: some trials in each feedback condition present correct feedback, others present wrong feedback.
 
-Also still unresolved:
-- Overall accuracy rate of feedback agents (when not "wrong")
-- Operational definition of high vs. low consensus
+### Why 50/50 correct/wrong does not work
 
----
+Equally distributing wrong and correct trials was considered but rejected for two reasons:
 
-## 6. Signal Detection Theory — Power Problem
+1. **SDT power:** A 50/50 split creates 8 cells (4 conditions × 2 feedback accuracy levels), each with ~5 trials and only ~2–3 signal or noise observations. Individual-level d' from 2–3 trials is essentially noise.
+2. **Ecological validity:** A 50% error rate is unrealistic. Participants who notice that feedback is wrong half the time will stop trusting it, collapsing the social influence manipulation.
 
-The spec mentions using SDT to estimate d' and criterion shift. SDT requires many trials per condition to produce reliable estimates — typically 20–40+ per condition. With only ~5 trials per condition per participant (20 images / 4 conditions), individual-level d' estimates will have enormous variance and be essentially unreliable.
+### Agreed approach
 
-Options:
-- Increase trials per condition (increases session length)
-- Analyse at the group level only
-- Use a Bayesian SDT approach that handles sparse data better
-- Acknowledge this as a limitation explicitly
+- Wrongness rate: **25%**, uniform across all agent types (`FEEDBACK_WRONG_RATE = 0.25`). Uniform rate keeps agent type and reliability orthogonal.
+- Feedback accuracy (correct / wrong) included as a **factor in the GLMM**.
+- SDT (d' and criterion) analysed at the **group level**, pooling trials across participants within each condition × feedback-accuracy cell. Individual-level SDT not attempted; acknowledged as underpowered in limitations.
+- Consensus: **fixed at unanimity** (`FEEDBACK_CONSENSUS = "unanimous"`). Varying consensus deferred to a future study.
+- Agents: 3 × "Consultant Radiologist" for human conditions, 1 × "AI Diagnostic System" for AI conditions. Human count identical across `human` and `human_ai` conditions.
+- This approach is pre-registered.
 
 ---
 
-## 7. Missing Measures
+## 7. Missing Measures — RESOLVED
 
-| Missing element | Why it matters |
-|---|---|
-| Individual differences: prior medical knowledge | Major moderator — a nurse vs. a layperson will respond very differently to the manipulations |
-| Trust in AI (pre-measure) | Likely the strongest individual-difference moderator |
-| Manipulation checks | Did participants actually read/notice the feedback? |
-| Demand characteristics check | Do participants guess the study hypothesis? |
-| Session duration estimate | Important for Prolific payment fairness (£2 may be too low) |
+- **Medical background**: single self-report item (none / informal / student / qualified professional), stored as `medical_training_level`, used as covariate.
+- **Trust in AI (pre-measure)**: Jian et al. (2000) Checklist for Trust between People and Automation, 12-item 7-point Likert adapted for AI, administered before any feedback exposure, stored as `ai_trust_pre_score`.
+- **Manipulation check**: post-study items verifying participants noticed and attended to feedback; participants failing despite being in a feedback condition flagged for sensitivity analysis.
+- **Demand characteristics**: open-ended item administered last; responses coded 0–2 blind to condition; full-awareness participants (score 2) excluded from primary analysis, included in sensitivity analysis.
+- **Payment**: £10/hour × 1.5 × estimated 48 min = **£12.00** (1.5× uplift for specialist medical pool), to be validated against pilot data.
 
 ---
 
-## 8. Prolific Integration — Incomplete
+## 8. Prolific Integration — RESOLVED
 
-The spec captures Prolific entry parameters but does not mention:
-- The **completion redirect URL** (Prolific requires a specific URL participants are sent to on completion to confirm payment)
-- Handling of **partial completions** (participant drops out mid-block — is their data usable?)
-- **Prescreening criteria** (age, medical training excluded or required?)
+- **Completion redirect**: view redirects to `https://app.prolific.com/submissions/complete?cc=<PROLIFIC_COMPLETION_CODE>` on success; code stored in `settings.py`.
+- **Partial completions**: data retained with `completion_status = "partial"`, excluded from primary analysis, retained for dropout analysis; not redirected to completion URL.
+- **Prescreening**: age 18+, fluent English, **any medical/nursing/radiography training (student or qualified)**, normal/corrected vision, Prolific approval rate ≥ 90%. Restricting to trained participants ensures d' > 0 and ecological validity of the feedback manipulation.
 
 ---
 
-## Priority Order
+## Status Summary
 
-1. Explicitly define blocked trial structure and baseline position constraint
-2. Define the feedback manipulation precisely — accuracy rate, consensus logic, how "wrongness" is introduced
-3. Address carryover effects — either constrain baseline to first block or commit to order analysis
-4. Resolve image assignment counterbalancing scheme before implementation
-5. Add a familiarisation phase (practice trials, excluded from dataset)
-6. Reconsider SDT viability given ~5 trials per condition
-7. Add Prolific completion URL to implementation requirements
+All design issues resolved. Remaining actions are post-piloting tasks:
+
+- **Validate session duration and payment** against pilot data; adjust £12.00 if median duration differs materially from 48 min estimate
+- **Pre-register** analysis strategy on OSF before data collection begins
