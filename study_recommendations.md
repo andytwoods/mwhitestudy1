@@ -4,18 +4,9 @@ Critical evaluation of `online_study_specification.md`.
 
 ---
 
-## 1. Blocked vs. Fully Randomised Trial Order
+## 1. Blocked vs. Fully Randomised Trial Order — RESOLVED
 
-The spec is ambiguous. It says "randomise condition order" and "randomise trial order within condition" — implying a blocked design, but never stating this explicitly.
-
-**Blocked is almost certainly the right call** because:
-- Each condition requires fundamentally different UI (feedback shown or not) — interleaving would be jarring
-- Switching between "you get AI feedback" and "you get nothing" mid-session would make the manipulation transparent
-
-**The spec should explicitly state:**
-- Trials are **blocked by condition** (condition order randomised, trial order within each block randomised)
-- Whether baseline is **position-constrained** (e.g., always first as a clean "no expectation" measure, or fully randomised like other blocks)
-- That **block position** should be stored and included as a covariate in analysis
+Trials are blocked by condition. Block order is fully randomised per participant (no position constraints on any condition). Trial order within each block is also randomised. Block position is stored per participant and must be included as a covariate in analysis to control for learning/fatigue confounds.
 
 ---
 
@@ -23,12 +14,14 @@ The spec is ambiguous. It says "randomise condition order" and "randomise trial 
 
 The biggest methodological concern in a within-subjects design. Once someone has seen AI feedback in block 2, their baseline block 3 is contaminated — they know feedback is coming, they've formed opinions about AI accuracy, etc.
 
-The spec mentions none of:
-- Washout periods between blocks
-- Constraints on baseline position (it arguably should always come first)
-- Analysis strategy for order effects (ANOVA with order as factor, or mixed models with block position as covariate)
+Fixing baseline as block 1 is not a solution — it trades carryover for a systematic order confound (position 1 effects become inseparable from the "no feedback" effect). Full randomisation of block order including baseline is correct.
 
-**Recommendation:** Either fix baseline as block 1, or at minimum commit to analysing order as an independent variable and power the study accordingly.
+Carryover is instead managed by:
+- Including block position as a covariate in the mixed model (already captured via `block_position`)
+- Acknowledging residual carryover as a limitation of the within-subjects design
+- Optionally adding short breaks between blocks to reduce fatigue-driven contamination
+
+The spec should explicitly commit to this analysis strategy. It should also note that any residual carryover (e.g. participants knowing feedback is coming once they've seen one feedback block) is an inherent limitation of the within-subjects design, not a fixable implementation issue.
 
 ---
 

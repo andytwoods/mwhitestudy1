@@ -159,17 +159,34 @@ TOTAL_TRIALS = sum(STUDY_TRIALS_PER_CONDITION.values())
 
 # Trial Order Randomisation
 
-To reduce order effects:
+## Structure
 
--   the order of conditions should be randomised per participant
--   the order of trials within each condition should be randomised per
-    participant
+Trials are **blocked by condition**: all trials for a given condition run
+together before the next condition begins. This avoids jarring mid-session
+UI switches (e.g. between "feedback shown" and "no feedback") and prevents
+the feedback manipulation from becoming immediately transparent to
+participants.
 
-Stored per participant:
+## Randomisation
 
--   condition_order
--   trial_order
+-   **Block order** is fully randomised per participant (no position
+    constraints on any condition, including baseline).
+-   **Trial order within each block** is randomised per participant.
+
+## Order Effects
+
+Because block order is fully randomised, block position must be recorded
+and included as a covariate in analysis (e.g. as a fixed effect in a mixed
+model) to control for learning and fatigue effects that may be confounded
+with condition order.
+
+## Stored per participant
+
+-   condition_order (the randomised sequence of condition blocks)
+-   trial_order (the randomised trial sequence within each block)
 -   image_assignment
+-   block_position (numeric position 1–4 for each condition, for use as a
+    covariate in analysis)
 
 ------------------------------------------------------------------------
 
