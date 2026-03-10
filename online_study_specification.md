@@ -173,20 +173,153 @@ participants.
     constraints on any condition, including baseline).
 -   **Trial order within each block** is randomised per participant.
 
+## Breaks Between Blocks
+
+A mandatory rest break is presented between each condition block. The
+participant must actively dismiss the break screen before the next block
+begins. This reduces fatigue-driven carryover and gives participants a
+moment to reset before a new feedback condition.
+
 ## Order Effects
 
-Because block order is fully randomised, block position must be recorded
-and included as a covariate in analysis (e.g. as a fixed effect in a mixed
-model) to control for learning and fatigue effects that may be confounded
-with condition order.
+Block order (position 1–4) and trial order within each block (position
+1–n) are both recorded per participant and included as factors in the
+analysis (fixed effects in a mixed model). This controls for learning,
+fatigue, and practice effects that may be confounded with condition
+assignment.
 
 ## Stored per participant
 
 -   condition_order (the randomised sequence of condition blocks)
 -   trial_order (the randomised trial sequence within each block)
--   image_assignment
--   block_position (numeric position 1–4 for each condition, for use as a
-    covariate in analysis)
+-   block_position (numeric position 1–4 for each condition)
+-   trial_position (numeric position of each trial within its block)
+
+------------------------------------------------------------------------
+
+# Image Bank and Assignment
+
+## Image Bank
+
+All images are drawn from a central image bank stored in the database.
+Each image has a known ground truth (malignant or benign).
+
+## Assignment Per Participant
+
+-   Images are randomly sampled from the bank for each participant.
+-   Each image is used **at most once** per participant (no repeats).
+-   Images are assigned to conditions such that malignant and benign
+    cases are **equally distributed across all four conditions** per
+    participant (e.g. if 5 trials per condition, each condition receives
+    the same number of malignant and benign images).
+
+## Assignment Across Participants
+
+-   Across participants, images should be distributed approximately
+    equally across conditions to avoid any single image being
+    over-represented in one condition.
+-   This is achieved by random assignment with a balancing constraint
+    (not a strict Latin square), tracked in the database.
+
+## Image as an Analysis Factor
+
+Image identity is recorded for every trial and included as a random
+effect in the mixed model to account for variability in image
+difficulty.
+
+## Stored per trial
+
+-   image_id
+-   image_ground_truth (malignant / benign)
+-   condition the image was shown under for this participant
+
+------------------------------------------------------------------------
+
+# Practice Trials
+
+Before the main study begins, participants complete a **practice block**
+of trials using images that are **not** drawn from the main image bank
+and are **excluded from all analysis**.
+
+Purpose:
+
+-   familiarise participants with the interface and response format
+-   reduce early learning effects that would otherwise be confounded
+    with whichever condition block comes first
+
+The practice block should include at least one example of each response
+type (diagnosis, confidence rating) and, where feasible, one example
+with and one without feedback, so participants understand both
+interfaces before real data collection begins.
+
+Practice trial count and images are configured separately from
+`STUDY_TRIALS_PER_CONDITION`.
+
+------------------------------------------------------------------------
+
+# Attention Checks
+
+## Rationale
+
+Prolific participants may respond carelessly, particularly in repetitive
+perceptual tasks. Attention checks identify inattentive participants
+for exclusion prior to analysis.
+
+## Method
+
+Two to three attention checks are embedded across the study, mixing
+two check types:
+
+### 1. Instructional Manipulation Check (IMC)
+
+A real-looking question whose body text contains an embedded instruction
+that overrides the apparent question (e.g. "People differ in their
+views on medicine. To show you are reading carefully, please select
+'Strongly disagree' regardless of your actual opinion."). Participants
+must read the full item to comply.
+
+### 2. Catch Trial
+
+One trial in the main task uses an unambiguous image (very clearly
+benign or very clearly malignant) for which the objectively correct
+diagnosis is obvious. An incorrect response flags potential
+inattention in the context of the actual task.
+
+### 3. Infrequency / Bogus Item (optional third check)
+
+A Likert-format statement that virtually no attentive person would
+endorse (e.g. "I have never had any thoughts of any kind"). Endorsing
+it signals careless responding.
+
+## Placement
+
+-   Check 1 (IMC): early in the study, within the first block.
+-   Check 2 (catch trial): embedded naturally within a mid-study block.
+-   Check 3 (infrequency item, if used): end of study questionnaire.
+
+## Exclusion Criterion
+
+Participants who fail **two or more** attention checks are excluded from
+analysis. This is consistent with Prolific's policy for studies ≥5
+minutes (Ward & Meade, 2023; Prolific researcher guidelines).
+
+A single failure is flagged but does not trigger exclusion on its own.
+
+## Supplementary Indicator
+
+Response time is recorded for every trial. Implausibly fast responses
+across all trials (e.g. below 10% of the sample median RT) are
+flagged as a secondary careless-responding indicator and reported
+alongside attention check failure rates.
+
+## Stored per participant
+
+-   attention_check_1_response
+-   attention_check_2_response (catch trial)
+-   attention_check_3_response (if used)
+-   attention_checks_failed (count)
+-   excluded_inattentive (boolean)
+-   median_trial_rt
 
 ------------------------------------------------------------------------
 
@@ -438,7 +571,9 @@ The "Human" and "Human + AI" conditions require a logic for how external opinion
 * **Consensus Modeling**: We must determine the **"Consensus of humans"** as an independent variable.
     * **High Consensus**: Multiple humans agreeing with each other.
     * **Low Consensus/Conflict**: Humans disagreeing, or the AI disagreeing with the human majority.
-* **Bias Triggering**: We may intentionally introduce **"wrongness"** or "low likelihood" assessments from the AI or humans to observe how participant confidence shifts when faced with incorrect consensus or "intrigue".
+* **Bias Triggering**: We may intentionally introduce **"wrongness"** from the AI or humans — defined as feedback that is **opposite to the correct answer** (i.e. the feedback agent diagnoses malignant when the ground truth is benign, or vice versa). This allows us to observe how participant confidence shifts when faced with incorrect consensus.
+
+  > **OPEN DECISION:** How to treat "wrongness" trials in the analysis is unresolved. Key questions include: Should incorrect-feedback trials be a separate factor? Should they be evenly distributed or sparse? How do they interact with consensus level? This will be revisited before implementation. See `study_recommendations.md` issue 5.
 
 
 

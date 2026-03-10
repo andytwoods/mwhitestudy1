@@ -25,35 +25,40 @@ The spec should explicitly commit to this analysis strategy. It should also note
 
 ---
 
-## 3. Learning / Fatigue Effects — Unaddressed
+## 3. Learning / Fatigue Effects — RESOLVED
 
-Participants will improve at classifying medical images over ~20 trials regardless of condition. This improvement will be correlated with condition order. The spec has no:
-- Practice trials / familiarisation phase before real data collection begins
-- Attention checks or catch trials
-- Breaks between blocks
-- Estimate of session duration / fatigue risk
-
----
-
-## 4. Image Assignment — Underspecified
-
-The spec mentions "balanced-ness" in the open design decisions but the database schema just stores `image_assignment` without defining the assignment logic. A concrete counterbalancing scheme is needed before implementation:
-
-- Does each image appear in only one condition per participant?
-- Across participants, should each image appear equally often in each condition? (This implies a Latin square or similar — complex to implement correctly)
-- Are malignant/benign images equally distributed across conditions per participant?
+- **Practice trials** added: a pre-study practice block using images outside the main bank, excluded from analysis, familiarises participants with both feedback and no-feedback interfaces.
+- **Attention checks** added: 2–3 checks (IMC + catch trial + optional infrequency item), placed early and mid-study. Exclusion threshold: ≥2 failures (per Prolific policy for studies ≥5 min). RT flagging as supplementary indicator.
+- **Breaks between blocks** added: mandatory rest screen between each condition block, participant-dismissed.
+- **Block position and trial position** both recorded and included as fixed effects in the mixed model.
+- Session duration estimate removed (not needed for implementation).
 
 ---
 
-## 5. Feedback Accuracy / Manipulation — Critical Gap
+## 4. Image Assignment — RESOLVED
 
-The spec mentions introducing "wrongness" from AI or human feedback to observe confidence shifts, but never defines:
-- What accuracy rate the simulated AI/human feedback has
-- Whether accuracy is fixed or varies (and how)
-- Whether feedback accuracy is an independent variable or just noise
-- How "high consensus" vs "low consensus" is operationally defined
+- Images drawn from a central bank; each image used at most once per participant.
+- Malignant/benign cases equally distributed across all four conditions per participant.
+- Across participants, images distributed approximately equally across conditions via random assignment with a balancing constraint.
+- Image identity recorded per trial and included as a **random effect** in the mixed model to account for image difficulty variability.
 
-This is arguably the core experimental manipulation and it is almost entirely unspecified.
+---
+
+## 5. Feedback Accuracy / Manipulation — OPEN, DEFERRED
+
+"Wrongness" is now defined in the spec as feedback that is **opposite to the correct answer** (e.g. the agent diagnoses malignant when ground truth is benign).
+
+How to treat wrongness trials in the analysis is unresolved. Open questions:
+- Should incorrect-feedback trials be a separate factor in the model, or a level within a feedback-accuracy factor?
+- How frequently should wrongness occur — evenly distributed, rare/surprising, or fixed per condition?
+- How does wrongness interact with consensus level (e.g. unanimous wrong vs. split)?
+- Should wrongness be pre-registered as a manipulation or treated as exploratory?
+
+**This decision is deferred. Do not implement feedback-accuracy logic until resolved.**
+
+Also still unresolved:
+- Overall accuracy rate of feedback agents (when not "wrong")
+- Operational definition of high vs. low consensus
 
 ---
 
