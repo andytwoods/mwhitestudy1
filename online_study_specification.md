@@ -739,6 +739,69 @@ before data collection begins.
 
 ------------------------------------------------------------------------
 
+# UI and Responsiveness
+
+## Guiding Principle
+
+All participant-facing screens must be **visually polished and fully
+responsive**. The study must work well across desktop, laptop, and
+tablet screen sizes without the participant needing to scroll
+horizontally or interact with cramped controls.
+
+## CSS Framework
+
+Use **Bulma** exclusively. No Bootstrap, Tailwind, or other CSS
+frameworks. Bulma's column and tile systems must be used to achieve
+responsive layouts rather than custom CSS wherever possible.
+
+## Forms
+
+-   All forms are rendered via **crispy-forms with the crispy-bulma
+    template pack**.
+-   Form fields must use Bulma's field/control/input markup so spacing,
+    focus states, and validation styles are consistent.
+-   Each question (diagnosis, confidence, post-feedback items) must be
+    presented clearly with generous vertical spacing — never cramped
+    or stacked without breathing room.
+-   Sliders must use Bulma-compatible styling and be finger-friendly
+    (adequate touch target size) for tablet users.
+-   Binary/multiple-choice responses should use styled radio button
+    groups or Bulma button groups, not unstyled default inputs.
+
+## Trial Layout
+
+-   On desktop/laptop: the medical image and the response form should
+    sit side-by-side (Bulma columns) so participants do not need to
+    scroll down to access the form after viewing the image.
+-   On smaller screens: the image stacks above the form, maintaining
+    readability without horizontal overflow.
+-   The image must never be so large that it pushes form controls off
+    screen on a typical laptop viewport (1280×800 or similar).
+
+## Feedback Display
+
+-   Agent feedback cards (human or AI assessments) must be displayed
+    in a visually distinct, styled component — not plain text.
+-   Multiple agent cards must wrap gracefully on narrow viewports.
+
+## Break and Transition Screens
+
+-   Inter-block break screens and practice/baseline transition screens
+    must be centred and uncluttered, with clear call-to-action buttons.
+
+## Modals and Alerts
+
+-   Use **SweetAlert2** for all confirmation dialogs and alerts. No
+    browser-native `alert()` or `confirm()` calls.
+
+## Typography and Spacing
+
+-   Use Bulma's typographic helpers (`title`, `subtitle`, `content`)
+    for headings and body text.
+-   Maintain consistent vertical rhythm throughout the trial flow.
+
+------------------------------------------------------------------------
+
 # Implementation Notes
 
 The study will be implemented as a **Django web application** designed

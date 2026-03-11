@@ -1,4 +1,4 @@
-# CLAUDE.md
+i am # CLAUDE.md
 
 ## Coding Guidelines
 
