@@ -257,7 +257,7 @@ Create `<app>/tests/factories.py` in each app. Minimum required factories for Ph
 
 ---
 
-## Phase 0 — Project Housekeeping
+## Phase 0 — Project Housekeeping ✓ COMPLETE
 
 Fix mismatches between the existing scaffold and project requirements before any feature work begins.
 
@@ -310,7 +310,7 @@ For each app:
 
 ---
 
-## Phase 1 — Core Data Models
+## Phase 1 — Core Data Models ✓ COMPLETE
 
 Define all models before writing any views. Run migrations after each app.
 
@@ -450,7 +450,7 @@ Register all in `trials/admin.py`.
 
 ---
 
-## Phase 2 — Study Configuration Loading
+## Phase 2 — Study Configuration Loading ✓ COMPLETE
 
 ### 2.1 Config loader utility
 - Create `mwhitestudy1/study/helpers/config_loader.py`.
@@ -474,7 +474,7 @@ Register all in `trials/admin.py`.
 
 ---
 
-## Phase 3 — Image Bank Management
+## Phase 3 — Image Bank Management ✓ COMPLETE
 
 ### 3.1 Image upload via Django admin
 - Customise `images/admin.py` with `ImageAdmin`:
@@ -501,7 +501,7 @@ Register all in `trials/admin.py`.
 
 ---
 
-## Phase 4 — Participant Entry & Consent
+## Phase 4 — Participant Entry & Consent ✓ COMPLETE
 
 ### 4.1 Entry view
 - URL: `/study/start/`

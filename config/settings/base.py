@@ -80,7 +80,7 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
-    "crispy_bootstrap5",
+    "crispy_bulma",
     "allauth",
     "allauth.account",
     "allauth.mfa",
@@ -89,7 +89,11 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "mwhitestudy1.users",
-    # Your stuff: custom apps go here
+    "mwhitestudy1.pages",
+    "mwhitestudy1.study",
+    "mwhitestudy1.participants",
+    "mwhitestudy1.images",
+    "mwhitestudy1.trials",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -202,8 +206,8 @@ TEMPLATES = [
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bulma"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bulma"
 
 # FIXTURES
 # ------------------------------------------------------------------------------
@@ -288,6 +292,10 @@ SOCIALACCOUNT_ADAPTER = "mwhitestudy1.users.adapters.SocialAccountAdapter"
 # https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "mwhitestudy1.users.forms.UserSocialSignupForm"}
 
+
+# Study configuration
+# ------------------------------------------------------------------------------
+ACTIVE_STUDY_CONFIG = "study_configs/study1.json"
 
 # Your stuff...
 # ------------------------------------------------------------------------------

@@ -1,0 +1,47 @@
+<form id="trial-form"
+      hx-post="{% url 'trials:trial' %}"
+      hx-target="#trial-container"
+      hx-swap="innerHTML">
+  {% csrf_token %}
+  <input type="hidden" name="trial_id" value="{{ trial.pk }}" />
+  <input type="hidden" name="stage" value="post_feedback" />
+  <input type="hidden" name="stage_start_time_ms" value="" />
+  {% if errors %}
+    <div class="notification is-danger mb-4">{% for e in errors %}<p>{{ e }}</p>{% endfor %}</div>
+  {% endif %}
+  {% for question in questions %}
+    <div class="field mb-5">
+      <label class="label">{{ question.question_text }}</label>
+      <div class="control">
+        {% if question.question_type == "binary" or question.question_type == "multiple_choice" %}
+          {% for option in question.response_options %}
+            <label class="radio mr-4">
+              <input type="radio" name="q_{{ question.pk }}" value="{{ option }}" required />
+              {{ option|capfirst }}
+            </label>
+          {% endfor %}
+        {% elif question.question_type == "slider" %}
+          <input class="slider is-fullwidth" type="range"
+                 name="q_{{ question.pk }}"
+                 min="{{ question.scale_min|default:0 }}"
+                 max="{{ question.scale_max|default:100 }}"
+                 step="{{ question.scale_step|default:1 }}"
+                 value="50"
+                 oninput="document.getElementById('sv2_{{ question.pk }}').textContent=this.value" />
+          <span id="sv2_{{ question.pk }}">50</span>
+        {% elif question.question_type == "likert" %}
+          <div class="field is-grouped">
+            {% for i in "1234567" %}
+              <label class="radio mr-3 has-text-centered">
+                <input type="radio" name="q_{{ question.pk }}" value="{{ i }}" required /><br/>{{ i }}
+              </label>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+  <div class="field"><div class="control">
+    <button type="submit" class="button is-primary is-medium">Submit</button>
+  </div></div>
+</form>

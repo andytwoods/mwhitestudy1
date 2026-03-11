@@ -1,0 +1,12 @@
+{% load crispy_forms_tags %}
+<form hx-post="{% url 'participants:background' %}"
+      hx-target="#background-form-container"
+      hx-swap="outerHTML">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <div class="field mt-4">
+    <div class="control">
+      <button type="submit" class="button is-primary">Continue</button>
+    </div>
+  </div>
+</form>

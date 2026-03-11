@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Debrief{% endblock title %}
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-8">
+      <div class="box content mb-5">
+        {{ study.debrief_html|safe }}
+      </div>
+      <div class="has-text-centered">
+        <p class="mb-4">Thank you for participating. Please click the button below to return to Prolific.</p>
+        <a href="{% url 'participants:complete' %}" class="button is-success is-large">
+          Complete &amp; Return to Prolific
+        </a>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

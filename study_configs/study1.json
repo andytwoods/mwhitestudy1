@@ -1,0 +1,26 @@
+{
+    "study_id": "study1",
+    "payment_gbp": 12.00,
+    "practice_trial_count": 5,
+    "prolific_completion_code": "CHANGEME",
+    "trials_per_condition": {
+        "baseline": 5,
+        "human": 5,
+        "human_ai": 5,
+        "ai": 5
+    },
+    "feedback_wrong_rate": 0.25,
+    "feedback_consensus": "unanimous",
+    "feedback_agents": {
+        "human": [
+            {"type": "human", "label": "Consultant Radiologist", "count": 3}
+        ],
+        "human_ai": [
+            {"type": "human", "label": "Consultant Radiologist", "count": 3},
+            {"type": "ai",    "label": "AI Diagnostic System",   "count": 1}
+        ],
+        "ai": [
+            {"type": "ai",    "label": "AI Diagnostic System",   "count": 1}
+        ]
+    }
+}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}User: {{ object.name }}{% endblock title %}
+
+{% block content %}
+  <h2 class="title">{{ object.name }}</h2>
+  {% if object == request.user %}
+    <div class="buttons">
+      <a class="button is-primary" href="{% url 'users:update' %}">My Info</a>
+      <a class="button is-light" href="{% url 'account_email' %}">E-Mail</a>
+      <a class="button is-light" href="{% url 'mfa_index' %}">MFA</a>
+    </div>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,28 @@
+<form hx-post="{% url 'participants:consent' %}"
+      hx-target="#consent-form-container"
+      hx-swap="outerHTML">
+  {% csrf_token %}
+  <div class="field">
+    <div class="control">
+      <label class="checkbox">
+        <input type="checkbox" id="confirm-read" required />
+        I have read and understood the participant information sheet above.
+      </label>
+    </div>
+  </div>
+
+  <div class="buttons mt-4">
+    <button type="submit"
+            name="consent_given"
+            value="true"
+            class="button is-primary is-medium">
+      I agree to participate
+    </button>
+    <button type="submit"
+            name="consent_given"
+            value="false"
+            class="button is-light is-medium">
+      I do not wish to participate
+    </button>
+  </div>
+</form>

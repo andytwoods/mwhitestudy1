@@ -1,0 +1,45 @@
+<form hx-post="{% url 'participants:ai-trust' %}"
+      hx-target="#ai-trust-form-container"
+      hx-swap="outerHTML">
+  {% csrf_token %}
+
+  <table class="table is-fullwidth is-striped">
+    <thead>
+      <tr>
+        <th>Statement</th>
+        {% for i in "1234567" %}
+          <th class="has-text-centered">{{ i }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for num, label, field in form.item_fields %}
+        <tr>
+          <td>{{ label }}</td>
+          {% for choice_value, _ in field.field.choices %}
+            <td class="has-text-centered">
+              <label class="radio">
+                <input type="radio"
+                       name="{{ field.html_name }}"
+                       value="{{ choice_value }}"
+                       {% if field.value == choice_value %}checked{% endif %}
+                       required />
+              </label>
+            </td>
+          {% endfor %}
+        </tr>
+        {% if field.errors %}
+          <tr>
+            <td colspan="8" class="has-text-danger is-size-7">{{ field.errors }}</td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="field mt-4">
+    <div class="control">
+      <button type="submit" class="button is-primary">Continue</button>
+    </div>
+  </div>
+</form>

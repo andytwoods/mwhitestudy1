@@ -1,9 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python:*)",
-      "Bash(cat:*)",
-      "WebSearch"
+      "Bash(*)",
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebSearch(*)",
+      "WebFetch(*)"
     ]
   }
 }

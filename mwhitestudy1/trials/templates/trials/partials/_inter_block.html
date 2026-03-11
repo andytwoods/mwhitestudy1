@@ -1,0 +1,11 @@
+<div class="has-text-centered py-6">
+  <h2 class="title is-4">Block {{ completed_block }} of {{ total_blocks }} complete</h2>
+  <p class="subtitle mb-5">Take a short break before continuing.</p>
+  <progress class="progress is-primary mb-5" value="{{ completed_block }}" max="{{ total_blocks }}">
+    {{ completed_block }}/{{ total_blocks }}
+  </progress>
+  <button class="button is-primary is-large"
+          hx-get="{% url 'trials:trial' %}"
+          hx-target="#trial-container"
+          hx-swap="innerHTML">Continue to next block</button>
+</div>

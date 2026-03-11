@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Participant Information &amp; Consent{% endblock title %}
+
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-8">
+      <h1 class="title">Participant Information &amp; Consent</h1>
+
+      <div class="box content mb-5">
+        {{ participant.study.consent_html|safe }}
+      </div>
+
+      <div id="consent-form-container">
+        {% include "participants/partials/_consent_form.html" %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

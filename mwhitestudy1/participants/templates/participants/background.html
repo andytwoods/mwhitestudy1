@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Background Information{% endblock title %}
+
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-6">
+      <h1 class="title">About You</h1>
+      <p class="subtitle">Please answer the following question before we begin.</p>
+
+      <div class="box" id="background-form-container">
+        {% include "participants/partials/_background_form.html" %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

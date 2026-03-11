@@ -1,0 +1,34 @@
+<div id="trial-container">
+  <div class="columns is-desktop">
+    <div class="column is-half-desktop">
+      <figure class="image">
+        <img src="{{ trial.image.image_file.url }}" alt="Medical image"
+             style="max-height:500px;width:auto;object-fit:contain;" />
+      </figure>
+    </div>
+    <div class="column is-half-desktop">
+      <h3 class="title is-5 mb-4">Assessments from other clinicians</h3>
+      <div class="columns is-multiline">
+        {% for agent in trial.feedback_presented.agents %}
+          <div class="column is-full">
+            <div class="card">
+              <div class="card-content">
+                <p class="subtitle is-6 mb-2">{{ agent.label }}</p>
+                <span class="tag {% if agent.diagnosis == 'malignant' %}is-danger{% else %}is-success{% endif %} is-medium">
+                  {{ agent.diagnosis|capfirst }}
+                </span>
+                <p class="is-size-7 has-text-grey mt-2">Confidence: {{ agent.confidence|floatformat:2 }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <button class="button is-primary is-medium mt-4"
+              hx-get="{% url 'trials:trial' %}?trial_id={{ trial.pk }}&stage=post_feedback"
+              hx-target="#trial-container"
+              hx-swap="innerHTML">
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
