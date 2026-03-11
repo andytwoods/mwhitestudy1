@@ -1,3 +1,101 @@
 {% extends "base.html" %}
 
+{% load i18n %}
 
+{% block title %}Researcher Dashboard — Medical Judgement Study{% endblock title %}
+
+{% block content %}
+  {% if request.user.is_authenticated %}
+    <section class="hero is-primary is-bold mb-6">
+      <div class="hero-body">
+        <p class="title">Medical Judgement Study</p>
+        <p class="subtitle">Researcher Dashboard</p>
+      </div>
+    </section>
+
+    <div class="columns is-centered">
+
+      <div class="column is-4">
+        <div class="card">
+          <div class="card-content has-text-centered">
+            <span class="icon is-large has-text-info mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </span>
+            <p class="title is-4">Study</p>
+            <p class="subtitle is-6 has-text-grey">View the participant study flow</p>
+          </div>
+          <footer class="card-footer">
+            <a href="{% url 'participants:entry' %}" class="card-footer-item button is-info is-fullwidth" style="border-radius:0 0 4px 4px;">
+              Open Study
+            </a>
+          </footer>
+        </div>
+      </div>
+
+      <div class="column is-4">
+        <div class="card">
+          <div class="card-content has-text-centered">
+            <span class="icon is-large has-text-dark mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+            </span>
+            <p class="title is-4">Admin</p>
+            <p class="subtitle is-6 has-text-grey">Manage data, users, and settings</p>
+          </div>
+          <footer class="card-footer">
+            <a href="{% url 'admin:index' %}" class="card-footer-item button is-dark is-fullwidth" style="border-radius:0 0 4px 4px;">
+              Open Admin
+            </a>
+          </footer>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="columns is-centered mt-4">
+      <div class="column is-8">
+        <div class="box">
+          <p class="label mb-2">Study preview URL <span class="tag is-warning is-light ml-2">test params</span></p>
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input id="study-url-input"
+                     class="input is-family-monospace is-small"
+                     type="text"
+                     readonly
+                     value="{{ study_preview_url }}" />
+            </div>
+            <div class="control">
+              <button class="button is-small is-info"
+                      onclick="navigator.clipboard.writeText(document.getElementById('study-url-input').value); this.textContent='Copied!';">
+                Copy
+              </button>
+            </div>
+            <div class="control">
+              <a href="{{ study_entry_path }}" class="button is-small is-link" target="_blank">
+                Open
+              </a>
+            </div>
+          </div>
+          <p class="help has-text-grey">Replace <code>TEST_PID</code>, <code>TEST_STUDY</code>, and <code>TEST_SESSION</code> with real Prolific values before sharing.</p>
+        </div>
+      </div>
+    </div>
+
+  {% else %}
+
+    <div class="has-text-centered mt-6">
+      <p class="title is-4">Medical Judgement Study</p>
+      <p class="subtitle has-text-grey">Please sign in to continue.</p>
+      <a class="button is-primary" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+    </div>
+
+  {% endif %}
+{% endblock content %}
