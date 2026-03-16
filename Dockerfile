@@ -38,6 +38,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Install libpq runtime library (required by psycopg[c])
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy the virtual environment and project from builder
 COPY --from=builder /app /app
 
