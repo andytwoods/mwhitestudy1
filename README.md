@@ -1,5 +1,21 @@
 # MWhiteStudy1
 
+## Info for Michael
+
+Run these commands in order to get the study working locally:
+
+1. Create a superuser account to access the Django admin panel:
+
+       python manage.py createsuperuser
+
+2. Bootstrap the study — creates the Condition, FeedbackAgentDefinition, and Question records from the study config (required before any participant flow will work):
+
+       python manage.py bootstrap_study
+
+3. Create placeholder images for testing (so the trial flow has images to assign):
+
+       python manage.py create_placeholder_images
+
 Behold My Awesome Project!
 
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)

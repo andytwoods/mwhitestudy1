@@ -16,7 +16,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/VENV" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.13 (mwhitestudy1)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="uv (mwhitestudy1)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">

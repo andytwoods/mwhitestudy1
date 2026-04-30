@@ -120,6 +120,16 @@ class PostStudyMeasure(models.Model):
         return f"Post-study measures for {self.participant}"
 
 
+class StudyNotifyRequest(models.Model):
+    """Email address submitted by someone who wants to be notified when the study is ready."""
+
+    email = models.EmailField(unique=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+
+
 class AttentionCheckResponse(models.Model):
     IMC = "imc"
     CATCH_TRIAL = "catch_trial"

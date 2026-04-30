@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% block title %}Post-Study Questions{% endblock title %}
 {% block content %}
+  {% include "participants/partials/_admin_skip_bar.html" with current_page="post-study" %}
   <div class="columns is-centered">
     <div class="column is-8">
       <h1 class="title">A Few Final Questions</h1>

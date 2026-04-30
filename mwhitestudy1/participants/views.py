@@ -1,14 +1,17 @@
 import statistics
 import logging
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import TemplateView
 
 from mwhitestudy1.participants.forms import AITrustForm
+from mwhitestudy1.participants.forms import StudyNotifyForm
 from mwhitestudy1.participants.forms_post_study import DemandAwarenessForm
 from mwhitestudy1.participants.forms_post_study import ManipulationCheckForm
 from mwhitestudy1.participants.forms import MedicalBackgroundForm
@@ -18,6 +21,7 @@ from mwhitestudy1.participants.models import ParticipantSession
 from mwhitestudy1.participants.models import DebriefRecord
 from mwhitestudy1.participants.models import PostStudyMeasure
 from mwhitestudy1.participants.models import PreStudyMeasure
+from mwhitestudy1.participants.models import StudyNotifyRequest
 from mwhitestudy1.study.helpers.config_loader import get_or_create_active_study
 from mwhitestudy1.trials.helpers.session_init import initialise_participant_session
 
@@ -167,7 +171,10 @@ class AITrustView(ParticipantSessionMixin, View):
             },
         )
 
-        initialise_participant_session(self.participant)
+        try:
+            initialise_participant_session(self.participant)
+        except ValueError:
+            return redirect(reverse("participants:study-not-ready"))
 
         if request.headers.get("HX-Request"):
             response = HttpResponse()
@@ -260,3 +267,67 @@ class CompleteView(View):
             return redirect(reverse("participants:debrief"))
         code = participant.study.config_json.get("prolific_completion_code", "")
         return redirect(f"https://app.prolific.com/submissions/complete?cc={code}")
+
+
+_SKIP_NEXT = {
+    "consent": "participants:background",
+    "background": "participants:ai-trust",
+    "ai-trust": "trials:trial",
+    "post-study": "participants:debrief",
+}
+
+
+@method_decorator(staff_member_required, name="dispatch")
+class AdminSkipView(View):
+    """Staff-only shortcut to jump past a participant flow page during preview.
+
+    Performs the minimum database setup that downstream pages depend on so the
+    flow continues without errors.
+    """
+
+    def get(self, request):
+        from_page = request.GET.get("from", "")
+        next_name = _SKIP_NEXT.get(from_page)
+        if not next_name:
+            return redirect(reverse("pages:home"))
+
+        participant_id = request.session.get("participant_id")
+        if not participant_id:
+            return redirect(reverse("participants:entry"))
+        try:
+            participant = ParticipantSession.objects.get(pk=participant_id)
+        except ParticipantSession.DoesNotExist:
+            return redirect(reverse("participants:entry"))
+
+        # Ensure PreStudyMeasure exists when skipping background or ai-trust
+        if from_page in ("background", "ai-trust"):
+            PreStudyMeasure.objects.get_or_create(
+                participant=participant,
+                defaults={"medical_training_level": PreStudyMeasure.UNDERGRADUATE},
+            )
+
+        # Ensure trials are initialised when jumping to the trial view
+        if from_page == "ai-trust":
+            from mwhitestudy1.trials.models import Trial as _Trial
+            if not _Trial.objects.filter(participant=participant).exists():
+                try:
+                    initialise_participant_session(participant)
+                except ValueError:
+                    return redirect(reverse("participants:study-not-ready"))
+
+        return redirect(reverse(next_name))
+
+
+class StudyNotReadyView(View):
+    """Shown when the study cannot start because feedback data is not yet loaded."""
+
+    def get(self, request):
+        return render(request, "participants/study_not_ready.html", {"form": StudyNotifyForm()})
+
+    def post(self, request):
+        form = StudyNotifyForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            StudyNotifyRequest.objects.get_or_create(email=email)
+            return render(request, "participants/study_not_ready.html", {"submitted": True})
+        return render(request, "participants/study_not_ready.html", {"form": form})
