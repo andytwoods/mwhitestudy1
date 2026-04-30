@@ -18,6 +18,12 @@
       <link rel="stylesheet" href="{% static 'css/project.css' %}" />
     {% endblock css %}
     <script defer src="{% static 'js/htmx.min.js' %}"></script>
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <script>
+      document.addEventListener('htmx:configRequest', (e) => {
+        e.detail.headers['X-CSRFToken'] = document.querySelector('meta[name="csrf-token"]').content;
+      });
+    </script>
     <script defer src="{% static 'js/sweetalert2.min.js' %}"></script>
     {% block javascript %}
       <script defer src="{% static 'js/project.js' %}"></script>
