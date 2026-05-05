@@ -16,6 +16,15 @@ SECRET_KEY = env(
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "*"]  # noqa: S104
 CSRF_TRUSTED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000", "http://0.0.0.0:8000",]
 
+
+
+DATABASES = {
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgresql://qsnervyqkiufdbte:sivxoqoskocwpjwe@167.235.66.120:8029/wchvbztgsrgthltm",
+    ),
+}
+
 # CACHES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#caches

@@ -11,11 +11,20 @@ class Image(models.Model):
 
     external_id = models.CharField(max_length=50, unique=True, db_index=True)
     ground_truth = models.CharField(max_length=50, choices=GROUND_TRUTH_CHOICES)
+    external_url = models.URLField(default=None, blank=True, null=True)
     image_file = models.ImageField(upload_to="images/")
     is_practice = models.BooleanField(default=False)
     is_catch_trial = models.BooleanField(default=False)
     source_dataset = models.CharField(max_length=100)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def get_image(self):
+        if self.external_url:
+            return self.external_url
+        else:
+            return self.image_file.url
+
 
     def __str__(self):
         return f"{self.external_id} ({self.ground_truth})"

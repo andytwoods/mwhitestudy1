@@ -8,7 +8,7 @@ from .models import ImageAssignment
 class ImageAdmin(admin.ModelAdmin):
     list_display = [
         "external_id",
-        "ground_truth",
+        "external_url",
         "is_practice",
         "is_catch_trial",
         "source_dataset",
