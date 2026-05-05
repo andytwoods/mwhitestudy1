@@ -144,7 +144,7 @@ class Response(models.Model):
     response_value = models.CharField(max_length=100)
     response_timestamp = models.DateTimeField()
     stage_location = models.CharField(max_length=50, choices=STAGE_CHOICES, db_index=True)
-    client_rt_ms = models.IntegerField(null=True, blank=True)
+    client_rt_ms = models.BigIntegerField(null=True, blank=True)
 
     class Meta:
         unique_together = [("trial", "question")]

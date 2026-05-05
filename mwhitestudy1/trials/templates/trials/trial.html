@@ -13,7 +13,27 @@
       if (!el.value) el.value = Date.now();
     });
   }
+
+  function calculateRT(evt) {
+    const form = evt.target;
+    const startInput = form.querySelector('input[name="stage_start_time_ms"]');
+    if (startInput && startInput.value) {
+      const startTime = parseInt(startInput.value);
+      const now = Date.now();
+      const rt = now - startTime;
+      // We overwrite the value with the duration (RT) just before sending.
+      // This is a bit of a hack since the name is 'stage_start_time_ms' but
+      // the backend uses it as client_rt_ms.
+      startInput.value = rt;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', stampStageStart);
   document.addEventListener('htmx:afterSwap', stampStageStart);
+  document.addEventListener('htmx:configRequest', function(evt) {
+    if (evt.detail.elt.id === 'trial-form') {
+      calculateRT(evt);
+    }
+  });
 </script>
 {% endblock inline_javascript %}
