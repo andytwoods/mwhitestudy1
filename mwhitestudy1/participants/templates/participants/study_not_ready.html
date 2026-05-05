@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Study Not Yet Available{% endblock title %}
+
+{% block content %}
+  <div class="columns is-centered">
+    <div class="column is-6">
+      <div class="box">
+        <h1 class="title is-4">Study Not Yet Available</h1>
+
+        {% if submitted %}
+          <div class="notification is-success">
+            <p>Thank you — we'll be in touch when the study is ready.</p>
+          </div>
+        {% else %}
+          <p class="mb-4">
+            We're still finishing the setup for this study. Leave your email address and
+            we'll let you know as soon as it's ready to take part.
+          </p>
+          <form method="post">
+            {% csrf_token %}
+            <div class="field">
+              <label class="label" for="id_email">Email address</label>
+              <div class="control">
+                {{ form.email }}
+              </div>
+              {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                  <p class="help is-danger">{{ error }}</p>
+                {% endfor %}
+              {% endif %}
+            </div>
+            <div class="field">
+              <div class="control">
+                <button type="submit" class="button is-primary">Notify me</button>
+              </div>
+            </div>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

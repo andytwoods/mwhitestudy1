@@ -1,6 +1,7 @@
 from django import forms
 
 from mwhitestudy1.participants.models import PreStudyMeasure
+from mwhitestudy1.participants.models import StudyNotifyRequest
 
 _LIKERT_CHOICES = [(str(i), str(i)) for i in range(1, 8)]
 
@@ -53,3 +54,12 @@ class AITrustForm(forms.Form):
     def get_item_responses(self) -> dict:
         """Return responses keyed by item number string, as stored in JSON."""
         return {str(num): int(self.cleaned_data[f"item_{num}"]) for num, _ in _AI_TRUST_ITEMS}
+
+
+class StudyNotifyForm(forms.ModelForm):
+    class Meta:
+        model = StudyNotifyRequest
+        fields = ["email"]
+        widgets = {
+            "email": forms.EmailInput(attrs={"class": "input", "placeholder": "your@email.com"}),
+        }
